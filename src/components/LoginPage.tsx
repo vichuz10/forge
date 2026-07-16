@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
       <div className="login-card glass-panel anim-scale-in">
         <div className="login-brand">
           <CheckSquare size={36} className="logo-icon" />
-          <h1 className="login-title text-gradient">Forge</h1>
+          <h1 className="login-title text-gradient">InfoTracker</h1>
           <p className="login-subtitle">Agile Issue & Bug Tracking</p>
         </div>
 

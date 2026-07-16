@@ -158,7 +158,7 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const createIssue = async (issueData: Omit<Issue, 'id' | 'comments' | 'history' | 'createdAt'>) => {
     const projectIssues = issues.filter(i => i.projectId === issueData.projectId);
     const issueNum = projectIssues.length + 1;
-    const projectKey = projects.find(p => p.id === issueData.projectId)?.key || 'FRG';
+    const projectKey = projects.find(p => p.id === issueData.projectId)?.key || 'INF';
     const ticketId = `${projectKey}-${issueNum}`;
 
     const newIssue = {

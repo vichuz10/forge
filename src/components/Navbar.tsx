@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onCreateIssu
       <div className="navbar-logo-section">
         <div className="navbar-logo">
           <CheckSquare size={22} className="logo-icon" />
-          <span className="logo-text text-gradient">Forge</span>
+          <span className="logo-text text-gradient">InfoTracker</span>
         </div>
         
         {/* Project Selector */}

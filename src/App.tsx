@@ -65,7 +65,7 @@ function AuthGate() {
     return (
       <div className="app-loading-screen">
         <div className="loading-spinner"></div>
-        <p>Loading Forge...</p>
+        <p>Loading InfoTracker...</p>
       </div>
     );
   }
