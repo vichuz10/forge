@@ -151,18 +151,18 @@ const defaultIssues: Issue[] = [
 
 export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem('zt_projects');
+    const saved = localStorage.getItem('fg_projects');
     return saved ? JSON.parse(saved) : defaultProjects;
   });
   const [activeProject, setActiveProject] = useState<Project>(() => {
     return projects[0] || defaultProjects[0];
   });
   const [users, setUsers] = useState<User[]>(() => {
-    const saved = localStorage.getItem('zt_users');
+    const saved = localStorage.getItem('fg_users');
     return saved ? JSON.parse(saved) : defaultUsers;
   });
   const [issues, setIssues] = useState<Issue[]>(() => {
-    const saved = localStorage.getItem('zt_issues');
+    const saved = localStorage.getItem('fg_issues');
     return saved ? JSON.parse(saved) : defaultIssues;
   });
   
@@ -170,21 +170,21 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const currentUser = users[0];
 
   useEffect(() => {
-    localStorage.setItem('zt_projects', JSON.stringify(projects));
+    localStorage.setItem('fg_projects', JSON.stringify(projects));
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem('zt_issues', JSON.stringify(issues));
+    localStorage.setItem('fg_issues', JSON.stringify(issues));
   }, [issues]);
 
   useEffect(() => {
-    localStorage.setItem('zt_users', JSON.stringify(users));
+    localStorage.setItem('fg_users', JSON.stringify(users));
   }, [users]);
 
   const createIssue = (issueData: Omit<Issue, 'id' | 'comments' | 'history' | 'createdAt'>) => {
     const projectIssues = issues.filter(i => i.projectId === issueData.projectId);
     const issueNum = projectIssues.length + 1;
-    const projectKey = projects.find(p => p.id === issueData.projectId)?.key || 'ZEN';
+    const projectKey = projects.find(p => p.id === issueData.projectId)?.key || 'FRG';
     const id = `${projectKey}-${issueNum}`;
 
     const newIssue: Issue = {
