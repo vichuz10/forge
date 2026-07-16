@@ -81,6 +81,52 @@ const defaultProjects: Project[] = [
   { id: '3', name: 'Mobile Apps', key: 'MOB' }
 ];
 
+const defaultUsers: User[] = [
+  { id: 'u1', name: 'M V Vishnujith', role: 'QA Lead & AI Engineer', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80' },
+  { id: 'u2', name: 'Sarah Connor', role: 'Product Manager', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80' },
+  { id: 'u3', name: 'Jane Doe', role: 'Frontend Engineer', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80' },
+  { id: 'u4', name: 'John Smith', role: 'Backend Engineer', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80' }
+];
+
+const defaultIssues: Issue[] = [
+  {
+    id: 'QA-1',
+    title: 'Playwright test runner fails during OAuth authentication in staging',
+    description: 'The Playwright automation suite is getting a timeout during the staging auth handshake. It seems the Redirect URL gets blocked by CORS or the gateway fails to forward headers.',
+    type: 'bug',
+    priority: 'highest',
+    status: 'inprogress',
+    assigneeId: 'u1',
+    reporterId: 'u3',
+    projectId: '1',
+    stepsToReproduce: '1. Run npm test:staging\n2. Wait for auth page to load\n3. Click Login via OAuth\n4. Observe 504 timeout on redirect endpoint.',
+    expectedBehavior: 'Redirect completes and Playwright receives auth token within 5 seconds.',
+    actualBehavior: 'Playwright timeout triggered at 15 seconds.',
+    comments: [
+      { id: 'c1', authorId: 'u4', text: 'I updated the staging gateway headers, let me know if it still fails.', createdAt: new Date(Date.now() - 3600000).toISOString() }
+    ],
+    history: [
+      { id: 'h1', userId: 'u3', action: 'created the issue', timestamp: new Date(Date.now() - 86400000).toISOString() },
+      { id: 'h2', userId: 'u1', action: 'moved status to In Progress', timestamp: new Date(Date.now() - 1800000).toISOString() }
+    ],
+    createdAt: new Date(Date.now() - 86400000).toISOString()
+  },
+  {
+    id: 'QA-2',
+    title: 'Write automation scripts for ticket lifecycle flow',
+    description: 'Implement end-to-end automation scripts validating all states (backlog, todo, inprogress, review, done) on the Kanban board using Playwright.',
+    type: 'task',
+    priority: 'high',
+    status: 'todo',
+    assigneeId: 'u1',
+    reporterId: 'u2',
+    projectId: '1',
+    comments: [],
+    history: [],
+    createdAt: new Date(Date.now() - 86400000).toISOString()
+  }
+];
+
 export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { firebaseUser } = useAuth();
   const [projects, setProjects] = useState<Project[]>(defaultProjects);
@@ -139,8 +185,15 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Real-time listener: Users
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'users'), (snapshot) => {
-      const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as User));
-      setUsers(docs);
+      if (snapshot.empty) {
+        defaultUsers.forEach(u => {
+          setDoc(doc(db, 'users', u.id), { name: u.name, role: u.role, avatar: u.avatar });
+        });
+        setUsers(defaultUsers);
+      } else {
+        const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as User));
+        setUsers(docs);
+      }
     });
     return () => unsub();
   }, []);
@@ -148,8 +201,30 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Real-time listener: Issues
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'issues'), (snapshot) => {
-      const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Issue));
-      setIssues(docs);
+      if (snapshot.empty) {
+        defaultIssues.forEach(i => {
+          setDoc(doc(db, 'issues', i.id), {
+            title: i.title,
+            description: i.description,
+            type: i.type,
+            priority: i.priority,
+            status: i.status,
+            assigneeId: i.assigneeId,
+            reporterId: i.reporterId,
+            projectId: i.projectId,
+            stepsToReproduce: i.stepsToReproduce || '',
+            expectedBehavior: i.expectedBehavior || '',
+            actualBehavior: i.actualBehavior || '',
+            comments: i.comments,
+            history: i.history,
+            createdAt: i.createdAt
+          });
+        });
+        setIssues(defaultIssues);
+      } else {
+        const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Issue));
+        setIssues(docs);
+      }
       setLoading(false);
     });
     return () => unsub();
