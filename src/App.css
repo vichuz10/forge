@@ -1,0 +1,15 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.app-main-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(circle at 80% 20%, rgba(112, 0, 255, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 10% 80%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+}
