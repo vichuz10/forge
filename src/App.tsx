@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProjectProvider } from './context/ProjectContext';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
@@ -6,6 +7,7 @@ import KanbanBoard from './components/KanbanBoard';
 import Teams from './components/Teams';
 import IssueModal from './components/IssueModal';
 import IssueDetails from './components/IssueDetails';
+import LoginPage from './components/LoginPage';
 import './App.css';
 
 function MainLayout() {
@@ -56,11 +58,34 @@ function MainLayout() {
   );
 }
 
-function App() {
+function AuthGate() {
+  const { firebaseUser, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="app-loading-screen">
+        <div className="loading-spinner"></div>
+        <p>Loading Forge...</p>
+      </div>
+    );
+  }
+
+  if (!firebaseUser) {
+    return <LoginPage />;
+  }
+
   return (
     <ProjectProvider>
       <MainLayout />
     </ProjectProvider>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AuthGate />
+    </AuthProvider>
   );
 }
 

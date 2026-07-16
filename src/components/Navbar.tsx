@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useProject } from '../context/ProjectContext';
-import { LayoutDashboard, KanbanSquare, Users, ChevronDown, CheckSquare, Plus, Check, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { LayoutDashboard, KanbanSquare, Users, ChevronDown, CheckSquare, Plus, Check, X, LogOut } from 'lucide-react';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onCreateIssueClick }) => {
   const { projects, activeProject, setActiveProject, currentUser, createProject } = useProject();
+  const { logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
   const [showProjForm, setShowProjForm] = useState(false);
@@ -150,6 +152,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onCreateIssu
             <div className="user-role">{currentUser.role}</div>
           </div>
         </div>
+
+        <button className="toolbar-btn" onClick={logout} title="Sign Out">
+          <LogOut size={18} />
+        </button>
       </div>
     </header>
   );
